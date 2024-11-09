@@ -1,0 +1,293 @@
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+#include <ctime>
+#include <windows.h>
+#include <unistd.h>
+//clases
+using namespace std;
+
+class Folio {
+    int numero;
+public:
+    Folio() : numero(obtenerFolio()) {}
+
+    int obtenerFolio() {
+        ifstream archivo("folio.txt");
+        if (!archivo.is_open()) {
+            return 0;
+        }
+        int numero;
+        archivo >> numero;
+        archivo.close();
+        return numero;
+    }
+
+    void guardarFolio() {
+        ofstream archivo("folio.txt");
+        if (!archivo.is_open()) {
+            cerr << "Error al abrir el archivo de folio" << endl;
+            exit(1);
+        }
+        archivo << numero;
+        archivo.close();
+    }
+
+    void incrementar() { numero++; }
+    int getNumero() const { return numero; }
+};
+
+class RegistroPaciente {
+    string apellido1;
+    string apellido2;
+    string nombre;
+    string telefono;
+
+public:
+    void registrarPaciente() {Sleep(200); system("cls");
+        cout << "\n\n+-------------------------+" << endl;
+        cout << "\n\n|     REGISTRO PACIENTE   |" << endl;
+        cout << "\n\n+-------------------------+" << endl;
+        cout << "Apellido paterno:\t";
+        cin >> apellido1;
+        cout << "Apellido materno:\t";
+        cin >> apellido2;
+        cout << "Nombre:\t\t\t";
+        cin >> nombre;
+
+        do {
+            cout << "Telefono celular:\t";
+            cin >> telefono;
+
+            if (telefono.length() == 10) {
+                cout << "Numero telefonico registrado: " << telefono << endl;
+            } else {
+                cout << "Numero telefonico invalido. Debe contener exactamente 10 digitos." << endl;
+            }
+        } while (telefono.length() != 10);
+    }
+};
+
+void mostrarBarraProgreso(int porcentaje) {
+    int longitudBarra = 50;
+    int progreso = (porcentaje * longitudBarra) / 100;
+
+    cout << "\r[";
+    for (int i = 0; i < longitudBarra; i++) {
+        cout << (i < progreso ? "#" : " ");
+    }
+    cout << "] " << porcentaje << "%";
+    cout.flush();
+}
+
+void mostrarMenuAnalisisClinico();
+
+int main() {
+    Folio folio;
+    RegistroPaciente paciente;
+
+    cout << "Iniciando sesion..." << endl;
+
+    for (int i = 0; i <= 100; i++) {
+        mostrarBarraProgreso(i);
+        usleep(2000);
+    }
+
+    cout << "\nBienvenido." << endl;
+
+    folio.incrementar();
+    folio.guardarFolio();
+
+    time_t t = time(nullptr);
+    tm* tm_info = localtime(&t);
+    char fecha[20];
+    strftime(fecha, sizeof(fecha), "%d/%m/%Y %H:%M:%S", tm_info);
+
+    paciente.registrarPaciente();
+
+    Sleep(200); system("cls");
+    mostrarMenuAnalisisClinico();
+
+    return 0;
+}
+
+void mostrarMenuAnalisisClinico() {
+    int op;
+    char opc;
+    bool regresar = false;
+
+    do {Sleep(200); system("cls");
+        cout << "\n\n+------------------------------------+" << endl;
+        cout << "\n\n|     MENU ANALISIS CLINICO          |" << endl;
+        cout << "\n\n+------------------------------------+" << endl;
+        cout << "[1] Hemograma Completo" << endl;
+        cout << "[2] Examen General de Orina (EGO)" << endl;
+        cout << "[3] Liquido Cefalorraquideo (LCR)" << endl;
+        cout << "[4] Regresar al Menu Principal" << endl;
+        cout << "Opcion:\t";
+        cin >> op;
+
+        switch(op) {
+            case 1: {
+                do {
+                    Sleep(200); system("cls");
+                    cout << "\n+------------------------------------+" << endl;
+                    cout << "|        Hemograma Completo          |" << endl;
+                    cout << "+------------------------------------+" << endl;
+                    cout << "| [A] Agregar                        |" << endl;
+                    cout << "| [B] Modificar                      |" << endl;
+                    cout << "| [C] Eliminar                       |" << endl;
+                    cout << "| [D] Buscar y mostrar               |" << endl;
+                    cout << "| [E] Regresar                       |" << endl;
+                    cout << "+------------------------------------+" << endl;
+                    cout << "Opcion:\t";
+                    cin >> opc;
+
+                    switch(tolower(opc)) {
+                        case 'a':
+                            cout << "Desea gregar por medio de:" << endl;
+                            // Código adicional para agregar
+                            cout <<"[1]Subir archivo txt"<<endl;//subir archic en txt
+                            cout <<"[2]Consola"<<endl;
+                            //case 2:
+                /*          cout <<"Recuento Globulos Rojos: Int"<<endl;
+                            cout <<"Recuento Globulos Blanco: Int"<<endl;
+                            cout <<"Recuento de Plaquetas: Int"<<endl;
+                            cout <<"Recuento de Hemoglobina: Float"<<endl;
+                            cout <<"Niveles de Hematrocito: Float"<<endl;
+                            cout <<"Volumen Corpuscular Medio"<<endl;
+                            cout <<"(VCM): Int"<<endl;
+*/                            cout <<"[3]Regresar"<<endl;
+                            break;
+                        case 'b':
+                            cout << "Modificar" << endl;
+                            // Código adicional para modificar
+                            cout << "Ingresa el folio del estudio a modificar:" << endl;
+
+                            break;
+                        case 'c':
+                            cout << "Eliminar" << endl;
+                            // Código adicional para eliminar
+                            cout<<"Ingresa el folio del estudio a eliminar:"<< endl;
+                            break;
+                        case 'd':
+                            cout << "Buscar y mostrar" << endl;
+                            // Código adicional para buscar y mostrar
+                            cout <<"Ingresa el folio del estudio que desea visualizar:"<<endl;
+                            break;
+                        case 'e':
+                            regresar = true;
+                            break;
+                        default:
+                            cout << "Opcion no valida" << endl;
+                    }
+                } while (!regresar);
+                regresar = false; // Resetea para el siguiente menú
+                break;
+            }
+
+            case 2: {
+                do {
+                    Sleep(200); system("cls");
+                    cout << "Examen General de Orina (EGO)" << endl;
+                    cout << "[A] Agregar" << endl;
+                    cout << "[B] Modificar" << endl;
+                    cout << "[C] Eliminar" << endl;
+                    cout << "[D] Buscar y mostrar" << endl;
+                    cout << "[E] Regresar" << endl;
+                    cout << "Opcion:\t";
+                    cin >> opc;
+
+                    switch(tolower(opc)) {
+                        case 'a':
+                             cout << "Desea gregar por medio de:" << endl;
+                            // Código adicional para agregar
+                            cout <<"[1]Subir archivo txt"<<endl;//subir archic en txt
+                            cout <<"[2]Consola"<<endl;
+  /*
+
+
+  */
+                            cout <<"[3]Regresar"<<endl;
+                            break;
+                        case 'b':
+                            cout << "Modificar" << endl;
+                            // Código adicional para modificar
+                            cout << "Ingresa el folio del estudio a modificar:" << endl;
+
+                            break;
+                        case 'c':
+                            cout << "Eliminar" << endl;
+                            // Código adicional para eliminar
+                            cout<<"Ingresa el folio del estudio a eliminar:"<< endl;
+                            break;
+                        case 'd':
+                            cout << "Buscar y mostrar" << endl;
+                            // Código adicional para buscar y mostrar
+                            cout <<"Ingresa el folio del estudio que desea visualizar:"<<endl;
+                            break;
+                        case 'e':
+                            regresar = true;
+                            break;
+                        default:
+                            cout << "Opcion no valida" << endl;
+                    }
+                } while (!regresar);
+                regresar = false;
+                break;
+            }
+
+            case 3: {
+                do {
+                    Sleep(200); system("cls");
+                    cout << "Liquido Cefalorraquideo (LCR)" << endl;
+                    cout << "[A] Agregar" << endl;
+                    cout << "[B] Modificar" << endl;
+                    cout << "[C] Eliminar" << endl;
+                    cout << "[D] Buscar y mostrar" << endl;
+                    cout << "[E] Regresar" << endl;
+                    cout << "Opcion:\t";
+                    cin >> opc;
+
+                    switch(tolower(opc)) {
+                         case 'a':
+                            // Código adicional para agregar
+                            cout <<"[1]Subir archivo txt"<<endl;//subir archic en txt
+                            cout <<"[2]Consola"<<endl;
+                            cout <<"[3]Regresar"<<endl;
+                            break;
+                        case 'b':
+                            cout << "Modificar" << endl;
+                            // Código adicional para modificar
+                            cout << "Ingresa el folio del estudio a modificar:" << endl;
+
+                            break;
+                        case 'c':
+                            cout << "Eliminar" << endl;
+                            // Código adicional para eliminar
+                            cout<<"Ingresa el folio del estudio a eliminar:"<< endl;
+                            break;
+                        case 'd':
+                            cout << "Buscar y mostrar" << endl;
+                            // Código adicional para buscar y mostrar
+                            cout <<"Ingresa el folio del estudio que desea visualizar:"<<endl;
+                            break;
+                        default:
+                            cout << "Opcion no valida" << endl;
+                    }
+                } while (!regresar);
+                regresar = false;
+                break;
+            }
+
+            case 4:
+                cout << "Regresando al menu principal..." << endl;
+                regresar = true;
+                break;
+
+            default:
+                cout << "Opcion no valida" << endl;
+        }
+    } while (!regresar);
+}
